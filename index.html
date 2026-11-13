@@ -3531,6 +3531,10 @@ function handleOverlayClick(e) { if (e.target === document.getElementById('modal
 
 /* ── TOAST ── */
 let toastTimer;
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -4565,7 +4569,7 @@ function submitReply(postId, idx) {
   const text = input?.value?.trim();
   if (!text) return;
   const lv = getLv(uStats.pts);
-  const reply = { u: '봄비내리는날', bg: lv.bg, c: lv.color, t: '방금' , txt: text };
+  const reply = { u: '봄비내리는날', bg: lv.bg, c: lv.color, t: '방금' , txt: escapeHtml(text) };
   if (!pdReplies[idx]) pdReplies[idx] = [];
   pdReplies[idx].push(reply);
   const slot = document.getElementById('replies-' + postId + '-' + idx);
@@ -4630,8 +4634,8 @@ function openPost(card) {
         </div>
         <span class="${tagClass}">${tag}</span>
       </div>
-      <div style="font-size:16px;font-weight:700;line-height:1.5;margin-bottom:8px">${title}</div>
-      ${preview ? `<div class="pd-post-full">${preview}</div>` : ''}
+      <div style="font-size:16px;font-weight:700;line-height:1.5;margin-bottom:8px">${escapeHtml(title)}</div>
+      ${preview ? `<div class="pd-post-full">${escapeHtml(preview)}</div>` : ''}
       <div class="pd-post-footer">
         <button class="reaction-btn" style="font-size:13px" onclick="showToast('공감했어요!')">❤️ 공감</button>
         <button class="reaction-btn" style="font-size:13px" onclick="showToast('저장됐어요!')">🔖 저장</button>
@@ -4663,7 +4667,7 @@ function submitPdComment() {
   const text = input.value.trim();
   if (!text) return;
   const lv = getLv(uStats.pts);
-  const cm = { u: '봄비내리는날', bg: lv.bg, c: lv.color, t: '방금', txt: text };
+  const cm = { u: '봄비내리는날', bg: lv.bg, c: lv.color, t: '방금', txt: escapeHtml(text) };
   pdUserComments.push(cm);
   renderCommentsList();
   const lbl = document.getElementById('pdCommLabel');
